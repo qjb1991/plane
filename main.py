@@ -4,13 +4,18 @@ import time
 from pygame.locals import *
 import random
 
-class HeroPlane(object):
-    def __init__(self, screen_temp):
-        self.x = 210
-        self.y = 500
+class BasePlane(object):
+    def __init__(self, screen_temp, x, y, image_name):
+        self.x = x
+        self.y = y
         self.screen = screen_temp
-        self.image = pygame.image.load("./resources/hero1.png")
+        self.image = pygame.image.load(image_name)
         self.bullet_list = []
+
+
+class HeroPlane(BasePlane):
+    def __init__(self, screen_temp):
+        BasePlane.__init__(self, screen_temp, 210, 500, "./resources/hero1.png")
     
     def display(self):
         self.screen.blit(self.image, (self.x, self.y))
@@ -29,14 +34,11 @@ class HeroPlane(object):
     def fire(self):
        self.bullet_list.append(Bullet(self.screen, self.x, self.y))
 
-class EnemyPlane(object):
+
+class EnemyPlane(BasePlane):
     def __init__(self, screen_temp):
-        self.x = 0
-        self.y = 0
+        BasePlane.__init__(self, screen_temp, 0, 0, "./resources/enemy0.png")
         self.sign = 0
-        self.screen = screen_temp
-        self.image = pygame.image.load("./resources/enemy0.png")
-        self.bullet_list = []
 
     def display(self):
         self.screen.blit(self.image, (self.x, self.y))
