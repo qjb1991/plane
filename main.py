@@ -12,11 +12,6 @@ class BasePlane(object):
         self.image = pygame.image.load(image_name)
         self.bullet_list = []
 
-
-class HeroPlane(BasePlane):
-    def __init__(self, screen_temp):
-        BasePlane.__init__(self, screen_temp, 210, 500, "./resources/hero1.png")
-    
     def display(self):
         self.screen.blit(self.image, (self.x, self.y))
         for bullet in self.bullet_list:
@@ -25,6 +20,11 @@ class HeroPlane(BasePlane):
             if bullet.judge():
                 self.bullet_list.remove(bullet)
 
+
+class HeroPlane(BasePlane):
+    def __init__(self, screen_temp):
+        BasePlane.__init__(self, screen_temp, 210, 500, "./resources/hero1.png")
+    
     def move_left(self):
         self.x -= 5
 
@@ -40,13 +40,7 @@ class EnemyPlane(BasePlane):
         BasePlane.__init__(self, screen_temp, 0, 0, "./resources/enemy0.png")
         self.sign = 0
 
-    def display(self):
-        self.screen.blit(self.image, (self.x, self.y))
-        for bullet in self.bullet_list:
-            bullet.display()
-            bullet.move()
-            if bullet.judge():
-                self.bullet_list.remove(bullet)
+
 
     def move(self):
         if self.sign == 0:
@@ -70,15 +64,20 @@ class EnemyPlane(BasePlane):
         if random_num == 30 or random_num == 50:
             self.bullet_list.append(EnemyBullet(self.screen, self.x, self.y))
 
-class Bullet(object):
-    def __init__(self, screen_temp, x, y):
-        self.x = x + 40
-        self.y = y - 20
+class BaseBullet(object):
+    def __init__(self, screen_temp, x, y, image_name):
+        self.x = x
+        self.y = y
         self.screen = screen_temp
-        self.image = pygame.image.load("./resources/bullet.png")
-        
+        self.image = pygame.image.load(image_name)
+
     def display(self):
         self.screen.blit(self.image, (self.x, self.y))
+
+
+class Bullet(BaseBullet):
+    def __init__(self, screen_temp, x, y):
+        BaseBullet.__init__(self, screen_temp, x+40, y-20, "./resources/bullet.png")
 
     def move(self):
         self.y -= 8
@@ -89,15 +88,10 @@ class Bullet(object):
         else:
             return False
 
-class EnemyBullet(object):
-    def __init__(self, screen_temp, x, y):
-        self.x = x + 25
-        self.y = y + 40
-        self.screen = screen_temp
-        self.image = pygame.image.load("./resources/bullet1.png")
 
-    def display(self):
-        self.screen.blit(self.image, (self.x, self.y))
+class EnemyBullet(BaseBullet):
+    def __init__(self, screen_temp, x, y):
+        BaseBullet.__init__(self, screen_temp, x+25, y+40, "./resources/bullet1.png")
 
     def move(self):
         self.y += 5
